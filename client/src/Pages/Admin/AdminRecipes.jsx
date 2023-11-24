@@ -33,8 +33,8 @@ export default function AdminRecipes() {
             return sortRecipes(sortFilter, a, b)
         })
         .filter((recipe) => {
-            return recipe.name
-                .toLowerCase()
+            return recipe?.name
+                ?.toLowerCase()
                 .includes(recipeNameFilter.toLowerCase())
         })
         .filter((recipe) => {
@@ -48,22 +48,22 @@ export default function AdminRecipes() {
                     <section className="admin-recipedata-container">
                         <h4 tabIndex={0}>
                             <span className="visuallyhidden">Resepti</span>
-                            {recipe.name}
+                            {recipe?.name}
                         </h4>
-                        <p tabIndex={0}>Käyttäjä: {recipe.user.email}</p>
-                        <p tabIndex={0}>Resepti id: {recipe._id}</p>
+                        <p tabIndex={0}>Käyttäjä: {recipe?.user?.email}</p>
+                        <p tabIndex={0}>Resepti id: {recipe?._id}</p>
                         <p tabIndex={0}>
                             Resepti luotu:{" "}
-                            {new Date(recipe.createdAt).toLocaleDateString(
+                            {new Date(recipe?.createdAt).toLocaleDateString(
                                 "fi-FI"
                             )}
                         </p>
                         <p>
                             <NavLink
-                                to={`../comments?recipeId=${recipe._id}`}
+                                to={`../comments?recipeId=${recipe?._id}`}
                                 className="navlink-to"
                             >
-                                Kommentit: {recipe.comments.length}
+                                Kommentit: {recipe?.comments?.length}
                             </NavLink>
                         </p>
                     </section>
@@ -71,9 +71,9 @@ export default function AdminRecipes() {
                         className="admin-delete-recipe"
                         onClick={() => {
                             setRecipeToDelete({
-                                name: recipe.name,
-                                _id: recipe._id,
-                                userId: recipe.user._id,
+                                name: recipe?.name,
+                                _id: recipe?._id,
+                                userId: recipe?.user._id,
                             })
                             setShowDeleteModal(true)
                         }}
@@ -83,9 +83,9 @@ export default function AdminRecipes() {
                 </div>
             )
         })
-    const maxPages = Math.ceil(recipes.length / initialRecipes)
+    const maxPages = Math.ceil(recipes?.length / initialRecipes)
 
-    const slicedRecipes = recipes.slice(
+    const slicedRecipes = recipes?.slice(
         (currentPage - 1) * initialRecipes,
         initialRecipes * currentPage
     )
@@ -154,7 +154,7 @@ export default function AdminRecipes() {
                     <option value="commentsAsc">Kommentit: nouseva</option>
                     <option value="commentsDesc">Kommentit: laskeva</option>
                 </select>
-                <p tabIndex={0}>Tuloksia: {recipes.length}</p>
+                <p tabIndex={0}>Tuloksia: {recipes?.length}</p>
             </div>
             <div id="admin-recipes-wrapper">{slicedRecipes}</div>
             {showDeleteModal &&
@@ -162,16 +162,16 @@ export default function AdminRecipes() {
                     <DeleteModal
                         props={{
                             text: "Haluatko varmasti poistaa reseptin ",
-                            name: recipeToDelete.name,
+                            name: recipeToDelete?.name,
                         }}
                         onDelete={async () => {
                             const res = await handleRecipeDeleteFromAdmin(
-                                recipeToDelete._id,
-                                recipeToDelete.userId
+                                recipeToDelete?._id,
+                                recipeToDelete?.userId
                             )
 
                             if (res.ok) {
-                                queryResponseRecipes.refetch()
+                                queryResponseRecipes?.refetch()
                             } else if (!res.ok) {
                                 document
                             }
