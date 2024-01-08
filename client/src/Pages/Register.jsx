@@ -1,5 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from "react"
-import { Form, Navigate, useActionData, useNavigation } from "react-router-dom"
+import {
+    Form,
+    Link,
+    Navigate,
+    useActionData,
+    useNavigation,
+} from "react-router-dom"
 import "./styles/Register.css"
 import { UserContext } from "../Context/UserContext"
 import { handleCapsLockDetection, validatePassword } from "../utils/utils"
@@ -63,9 +69,11 @@ export default function Register() {
                     autoComplete="email"
                     ref={inputRef}
                     onBlur={(event) => {
-                        const validatedEmail = validator.validate(
-                            event.target.value
-                        )
+                        const emailInput = event.target.value
+                        const validatedEmail = validator.validate(emailInput)
+                        if (emailInput.length === 0) {
+                            return
+                        }
                         setEmailValidity(validatedEmail)
                         if (!validatedEmail) {
                             setShowEmailWarning(true)
@@ -74,14 +82,15 @@ export default function Register() {
                         }
                     }}
                     onChange={(event) => {
-                        const validatedEmail = validator.validate(
-                            event.target.value
-                        )
+                        const emailInput = event.target.value
+                        if (emailInput.length === 0) {
+                            setShowEmailWarning(false)
+                        }
+                        const validatedEmail = validator.validate(emailInput)
                         setEmailValidity(validatedEmail)
-                        if (!validatedEmail) {
-                            console.log("hp")
+                        if (!validatedEmail && emailValidity) {
                             setShowEmailWarning(true)
-                        } else {
+                        } else if (validatedEmail) {
                             setShowEmailWarning(false)
                         }
                     }}
@@ -162,6 +171,13 @@ export default function Register() {
                         : "Rekisteröidään käyttäjä..."}
                 </button>
             </Form>
+            <hr id="login_horizontal_line" />
+            <div id="already_registered">
+                <p id="">Oletko jo rekisteröitynyt?</p>
+                <Link to="/login" id="login_now">
+                    Kirjaudu sisään
+                </Link>
+            </div>
         </section>
     )
 }
