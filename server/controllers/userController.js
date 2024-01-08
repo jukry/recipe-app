@@ -6,13 +6,9 @@ import Comment from "../models/Comment.js"
 const saltRounds = 10
 
 const registerUser = async (req, res) => {
-    const { email, password, repassword } = req.body
+    const { email, password } = req.body
 
-    if (password !== repassword) {
-        return res.status(406).json({ Message: "Passwords do not match" })
-    }
-
-    if (!email || !password || !repassword) {
+    if (!email || !password) {
         return res.status(401).json({ Message: "Please fill all fields" })
     }
     const found = await User.find({ email: email }).count()
