@@ -65,8 +65,7 @@
 }
 #caps_lock_warning {
     margin-top: 1em;
-    color: var(--clr-text);
-    font-size: 1.25em;
+    color: var(--clr-accent-danger-neutral);
 }
 #login_horizontal_line {
     width: calc(100% - 2em);
