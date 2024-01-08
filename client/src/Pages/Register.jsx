@@ -1,17 +1,31 @@
-import React, { useContext, useEffect, useRef } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import { Form, Navigate, useActionData, useNavigation } from "react-router-dom"
 import "./styles/Register.css"
 import { UserContext } from "../Context/UserContext"
+import { handleCapsLockDetection, validatePassword } from "../utils/utils"
+import showPasswordImg from "/show-password.svg"
+import hidePasswordImg from "/hide-password.svg"
+import validator from "email-validator"
 
 export default function Register() {
     const navigation = useNavigation()
     const action = useActionData()
     const { user } = useContext(UserContext)
     const inputRef = useRef(null)
-
+    const [showPassword, setShowPassword] = useState(false)
+    const [capsLockOn, setCapsLockOn] = useState(false)
+    const [passwordValidity, setPasswordValidity] = useState(false)
+    const [showPasswordWarning, setShowPasswordWarning] = useState(false)
+    const [emailValidity, setEmailValidity] = useState(false)
+    const [showEmailWarning, setShowEmailWarning] = useState(false)
     useEffect(() => {
         //for accessibility
         inputRef.current.focus()
+
+        document.addEventListener("keydown", (event) => {
+            const capsLockState = handleCapsLockDetection(event)
+            setCapsLockOn(capsLockState)
+        })
     }, [])
     if (user.id) {
         return <Navigate to="/account" />
@@ -21,9 +35,7 @@ export default function Register() {
             <h2 tabIndex={0}>Rekisteröidy</h2>
             {action && (
                 <h3 id="check-register-input" tabIndex={0}>
-                    {action === 406
-                        ? "Salasanat eivät täsmää"
-                        : action === 401
+                    {action === 401
                         ? "Täytä kaikki kentät"
                         : action === 403
                         ? "Sähköposti on jo käytössä"
@@ -34,9 +46,7 @@ export default function Register() {
             )}
             <Form replace="true" method="post" id="register-form">
                 <label htmlFor="email" className="visuallyhidden">
-                    {action === 406
-                        ? "Salasanat eivät täsmää"
-                        : action === 401
+                    {action === 401
                         ? "Täytä kaikki kentät"
                         : action === 403
                         ? "Sähköposti on jo käytössä"
@@ -52,49 +62,101 @@ export default function Register() {
                     required
                     autoComplete="email"
                     ref={inputRef}
+                    onBlur={(event) => {
+                        const validatedEmail = validator.validate(
+                            event.target.value
+                        )
+                        setEmailValidity(validatedEmail)
+                        if (!validatedEmail) {
+                            setShowEmailWarning(true)
+                        } else {
+                            setShowEmailWarning(false)
+                        }
+                    }}
+                    onChange={(event) => {
+                        const validatedEmail = validator.validate(
+                            event.target.value
+                        )
+                        setEmailValidity(validatedEmail)
+                        if (!validatedEmail) {
+                            console.log("hp")
+                            setShowEmailWarning(true)
+                        } else {
+                            setShowEmailWarning(false)
+                        }
+                    }}
                 />
-                <label htmlFor="password" className="visuallyhidden">
-                    {action === 406
-                        ? "Salasanat eivät täsmää"
-                        : action === 401
-                        ? "Täytä kaikki kentät"
-                        : action === 403
-                        ? "Sähköposti on jo käytössä"
-                        : action === 400
-                        ? "Jotain meni pieleen, yritä uudelleen"
-                        : ""}
-                </label>
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Salasana"
-                    id="password"
-                    required
-                    pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                    title="Salasanassa pitää olla ainakin yksi numero, yksi pieni kirjain, yksi iso kirjain sekä vähintään 8 merkkiä"
-                />
-                <label htmlFor="re-password" className="visuallyhidden">
-                    {action === 406
-                        ? "Salasanat eivät täsmää"
-                        : action === 401
-                        ? "Täytä kaikki kentät"
-                        : action === 403
-                        ? "Sähköposti on jo käytössä"
-                        : action === 400
-                        ? "Jotain meni pieleen, yritä uudelleen"
-                        : ""}
-                </label>
-                <input
-                    type="password"
-                    name="re-password"
-                    id="re-password"
-                    placeholder="Kirjoita salasana uudelleen"
-                    required
-                    pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                    title="Salasanassa pitää olla ainakin yksi numero, yksi pieni kirjain, yksi iso kirjain sekä vähintään 8 merkkiä"
-                />
-
-                <button disabled={navigation.state === "submitting"}>
+                {showEmailWarning && (
+                    <p id="email_warning">
+                        Sähköpostiosoite ei ole pätevä, tarkista antamasi osoite
+                    </p>
+                )}
+                <div id="password_container">
+                    <label htmlFor="password" className="visuallyhidden">
+                        {action === 401
+                            ? "Täytä kaikki kentät"
+                            : action === 403
+                            ? "Sähköposti on jo käytössä"
+                            : action === 400
+                            ? "Jotain meni pieleen, yritä uudelleen"
+                            : ""}
+                    </label>
+                    <input
+                        type={showPassword ? "text" : "password"}
+                        name="password"
+                        placeholder="Salasana"
+                        id="password"
+                        required
+                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                        title="Salasanassa pitää olla ainakin yksi numero, yksi pieni kirjain, yksi iso kirjain sekä vähintään 8 merkkiä"
+                        onBlur={(e) => {
+                            const validatedPassword = validatePassword(e)
+                            setPasswordValidity(validatedPassword)
+                            if (e.target.value.length > 0) {
+                                setShowPasswordWarning(!validatedPassword)
+                            }
+                        }}
+                        onChange={(e) => {
+                            const validatedPassword = validatePassword(e)
+                            if (!validatedPassword && passwordValidity) {
+                                setShowPasswordWarning(true)
+                            } else if (validatedPassword) {
+                                setPasswordValidity(validatedPassword)
+                                setShowPasswordWarning(!validatedPassword)
+                            }
+                        }}
+                    />
+                    <img
+                        src={showPassword ? hidePasswordImg : showPasswordImg}
+                        title={
+                            showPassword ? "Piilota salasana" : "Näytä salasana"
+                        }
+                        id="password_visibility"
+                        onPointerEnter={() => {
+                            setShowPassword(true)
+                        }}
+                        onPointerLeave={() => {
+                            setShowPassword(false)
+                        }}
+                    />
+                </div>
+                {showPasswordWarning && (
+                    <p id="invalid_password">
+                        Salasanan tulee olla ainakin 8 merkkiä pitkä sekä
+                        sisältää vähintään 1 pieni ja 1 iso kirjain, 1 numero
+                        sekä 1 erikoismerkki
+                    </p>
+                )}
+                {capsLockOn && (
+                    <p id="caps_lock_warning">Caps lock on päällä</p>
+                )}
+                <button
+                    disabled={
+                        navigation.state === "submitting" ||
+                        emailValidity === false ||
+                        passwordValidity === false
+                    }
+                >
                     {navigation.state === "idle"
                         ? "Rekisteröidy"
                         : "Rekisteröidään käyttäjä..."}
