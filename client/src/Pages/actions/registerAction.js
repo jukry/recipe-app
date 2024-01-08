@@ -16,7 +16,6 @@ export async function action({ request }) {
                 body: JSON.stringify({
                     email: await formData.get("email"),
                     password: await formData.get("password"),
-                    repassword: await formData.get("re-password"),
                 }),
             }
         )
