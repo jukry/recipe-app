@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react"
 import "./styles/Login.css"
-import { Navigate, useNavigate } from "react-router-dom"
+import { Link, Navigate, useNavigate } from "react-router-dom"
 import { UserContext } from "../Context/UserContext"
 import { useLogin } from "../Hooks/useLogin"
 import showPasswordImg from "/show-password.svg"
@@ -44,7 +44,7 @@ export default function Login() {
     }
 
     return (
-        <div className="login-container">
+        <section className="login-container">
             <h2 tabIndex={0}>Kirjaudu sisään</h2>
             {loginStatus && (
                 <h3 className="check-login-input">
@@ -127,6 +127,13 @@ export default function Login() {
                     {!isLoading ? "Kirjaudu sisään" : "Kirjaudutaan..."}
                 </button>
             </form>
-        </div>
+            <hr id="login_horizontal_line" />
+            <div id="not_registered">
+                <p id="">Etkö ole vielä rekisteröitynyt? </p>
+                <Link to="/register" id="register_now">
+                    Rekisteröidy nyt
+                </Link>
+            </div>
+        </section>
     )
 }
