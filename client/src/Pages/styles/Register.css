@@ -22,7 +22,7 @@
     padding: 1em;
     width: 100%;
 }
-#register-form > input {
+#register-form input {
     padding: 1em;
     outline: none;
     border: 1px solid grey;
@@ -49,4 +49,29 @@
     color: rgb(255, 146, 146);
     position: absolute;
     top: 10em;
+}
+#password {
+    width: 100%;
+}
+#password_visibility {
+    position: absolute;
+    width: 25px;
+    top: 33%;
+    cursor: pointer;
+    right: 10px;
+}
+#password_container {
+    position: relative;
+}
+#invalid_password {
+    margin-top: 1em;
+    color: var(--clr-accent-danger-neutral);
+}
+#caps_lock_warning {
+    margin-top: 1em;
+    color: var(--clr-accent-danger-neutral);
+}
+#email_warning {
+    color: var(--clr-accent-danger-neutral);
+    margin: 0.5em 0;
 }

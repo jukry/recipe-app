@@ -22,11 +22,14 @@
     padding: 1em;
     width: 100%;
 }
-.login-form > input {
+.login-form input {
     padding: 1em;
     outline: none;
     border: 1px solid grey;
     font-size: 1.25em;
+}
+#password {
+    width: 100%;
 }
 .login-form:first-child {
     border-bottom: none;
@@ -49,4 +52,19 @@
     color: rgb(255, 146, 146);
     position: absolute;
     top: 10em;
+}
+#password_container {
+    position: relative;
+}
+#password_visibility {
+    position: absolute;
+    width: 25px;
+    top: 33%;
+    cursor: pointer;
+    right: 10px;
+}
+#caps_lock_warning {
+    margin-top: 1em;
+    color: var(--clr-text);
+    font-size: 1.25em;
 }
