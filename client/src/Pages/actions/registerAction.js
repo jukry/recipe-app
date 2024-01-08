@@ -48,8 +48,8 @@ export async function action({ request }) {
         if (!res.ok) {
             return res.status
         } else {
-            location.replace("/account")
-            return redirect("/account")
+            location.replace("/")
+            return redirect("/")
         }
     }
 }
