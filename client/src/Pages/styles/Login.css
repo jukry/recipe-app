@@ -68,3 +68,16 @@
     color: var(--clr-text);
     font-size: 1.25em;
 }
+#login_horizontal_line {
+    width: calc(100% - 2em);
+    border: 1px solid var(--clr-accent-neutral);
+}
+#not_registered {
+    color: white;
+    padding: 0 1em;
+    text-align: center;
+    font-size: 1.25em;
+}
+#register_now {
+    border-bottom: 1px solid var(--clr-accent-neutral);
+}
